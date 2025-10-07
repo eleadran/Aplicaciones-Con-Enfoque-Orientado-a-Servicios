@@ -1,10 +1,6 @@
 package pe.edu.idat.EC1Soap_InfantesBarrientos.service;
 
-import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Configuration;
 import org.springframework.stereotype.Service;
-import org.springframework.ws.wsdl.wsdl11.DefaultWsdl11Definition;
-import org.springframework.xml.xsd.XsdSchema;
 
 @Service
 public class OperacionesService {
