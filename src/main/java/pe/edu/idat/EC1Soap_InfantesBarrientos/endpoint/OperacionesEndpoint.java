@@ -8,27 +8,29 @@ import pe.edu.idat.EC1Soap_InfantesBarrientos.service.OperacionesService;
 import pe.edu.idat.ws.descuento.GetDescuentoRequest;
 import pe.edu.idat.ws.descuento.GetDescuentoResponse;
 
+
 @Endpoint
 public class OperacionesEndpoint {
 
-    private static final String NAMESPACE_URI = "http://www.idat.edu.pe/ws/descuento";
-
     private final OperacionesService operacionesService;
+    private final String NAME_SPACE = "http://www.idat.edu.pe/ws/descuento";
 
     public OperacionesEndpoint(OperacionesService operacionesService) {
         this.operacionesService = operacionesService;
     }
 
-    @PayloadRoot(namespace = NAMESPACE_URI, localPart = "getDescuentoRequest")
+    @PayloadRoot(namespace = NAME_SPACE, localPart = "getDescuentoRequest")
     @ResponsePayload
-    public GetDescuentoResponse obtenerDescuento(@RequestPayload GetDescuentoRequest request) {
-        double total = operacionesService.calcularTotal(request.getCantidad(), request.getPrecio());
-        String mensaje = operacionesService.generarMensaje(total);
-
+    public GetDescuentoResponse getDescuento(
+            @RequestPayload GetDescuentoRequest request) {
         GetDescuentoResponse response = new GetDescuentoResponse();
-        response.setTotal(total);
-        response.setMensaje(mensaje);
-
+        response.setMensaje(
+                operacionesService.descuento(
+                        request.getCantidad(),
+                        request.getPrecio()
+                )
+        );
         return response;
     }
+
 }
