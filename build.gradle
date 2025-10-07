@@ -1,0 +1,47 @@
+plugins {
+	id 'java'
+	id 'org.springframework.boot' version '3.5.6'
+	id 'io.spring.dependency-management' version '1.1.7'
+}
+
+group = 'pe.edu.idat'
+version = '0.0.1-SNAPSHOT'
+description = 'Demo project for Spring Boot'
+
+java {
+	toolchain {
+		languageVersion = JavaLanguageVersion.of(21)
+	}
+}
+
+repositories {
+	mavenCentral()
+}
+configurations {
+    create("xjc")
+}
+
+dependencies {
+	implementation 'org.springframework.boot:spring-boot-starter-web-services'
+	developmentOnly 'org.springframework.boot:spring-boot-devtools'
+
+    implementation 'wsdl4j:wsdl4j'
+    implementation 'jakarta.xml.bind:jakarta.xml.bind-api:4.0.2'
+
+	testImplementation 'org.springframework.boot:spring-boot-starter-test'
+	testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
+    "xjc"("org.glassfish.jaxb:jaxb-xjc:4.0.5")
+}
+tasks.register('xjc', JavaExec){
+    group = 'code generation'
+    description = 'Generated JAXB classes'
+    mainClass = 'com.sun.tools.xjc.Driver'
+    classpath = configurations.xjc
+    args '-d', 'src/main/java', "${project.projectDir}/src/main/resources/xsd/descuento.xsd"
+}
+tasks.named('compileJava'){
+    dependsOn tasks.named('xjc')
+}
+tasks.named('test') {
+	useJUnitPlatform()
+}
